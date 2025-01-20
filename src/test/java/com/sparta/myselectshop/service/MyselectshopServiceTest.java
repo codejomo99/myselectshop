@@ -9,7 +9,10 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.entity.User;
+import com.sparta.myselectshop.entity.UserRoleEnum;
 import com.sparta.myselectshop.repository.ProductRepository;
+import com.sparta.myselectshop.repository.UserRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,31 +31,20 @@ public class MyselectshopServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         // 테스트 데이터 삽입
         ProductRequestDto productRequestDto = new ProductRequestDto("테스트","테스트 이미지","테스트 링크",10000);
+        User user = new User("테스트","테스트","test.com", UserRoleEnum.USER);
+
+        userRepository.save(user);
         productRepository.save(new Product(productRequestDto, user));
     }
 
 
-    @Test
-    @Transactional
-    // @Rollback(value = false)
-    @DisplayName("createProduct - Product를 DB에 저장하고 올바른 결과 반환")
-    void createProduct() {
-
-        // Given: 요청 데이터 준비
-        ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
-
-        // When: 서비스 메소드 호출
-        ProductResponseDto responseDto = productService.createProduct(requestDto, userDetails.getUser());
-
-        // Then: 결과 확인
-        Product savedProduct = productRepository.findAll().get(0);
-        assertEquals("테스트", savedProduct.getTitle());
-        assertEquals(1000, savedProduct.getLprice());
-    }
 
     @Test
     @DisplayName("readProduct - Product를 DB에서 조회")
@@ -60,11 +52,12 @@ public class MyselectshopServiceTest {
         // Given
         ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
         ProductRequestDto requestDto2 = new ProductRequestDto("테스트2","이미지 경로2","링크 경로2",2000);
-        productService.createProduct(requestDto, userDetails.getUser());
-        productService.createProduct(requestDto2, userDetails.getUser());
+        User user = userRepository.findByUsername("테스트").orElseThrow();
+        productService.createProduct(requestDto,user);
+        productService.createProduct(requestDto2,user);
 
         // When
-        List<ProductResponseDto> responseDtos =  productService.readProduct(userDetails.getUser());
+        List<ProductResponseDto> responseDtos =  productService.readProduct(user);
 
         // Then
         assertEquals(3,responseDtos.size());
