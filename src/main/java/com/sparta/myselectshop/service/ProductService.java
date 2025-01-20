@@ -4,6 +4,7 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 import java.util.List;
@@ -21,15 +22,16 @@ public class ProductService {
     public static final int MIN_MY_PRICE = 100;
 
     // 생성
-    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
-        Product product = productRepository.save(new Product(productRequestDto));
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto, User user) {
+        Product product = productRepository.save(new Product(productRequestDto,user));
+
 
         return new ProductResponseDto(product);
     }
 
     // 조회
-    public List<ProductResponseDto> readProduct() {
-        return productRepository.findAll().stream()
+    public List<ProductResponseDto> readProduct(User user) {
+        return productRepository.findAllByUser(user).stream()
                 .map(ProductResponseDto::new).toList();
     }
 

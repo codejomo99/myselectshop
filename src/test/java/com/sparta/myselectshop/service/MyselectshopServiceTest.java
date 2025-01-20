@@ -32,7 +32,7 @@ public class MyselectshopServiceTest {
     void setUp() {
         // 테스트 데이터 삽입
         ProductRequestDto productRequestDto = new ProductRequestDto("테스트","테스트 이미지","테스트 링크",10000);
-        productRepository.save(new Product(productRequestDto));
+        productRepository.save(new Product(productRequestDto, user));
     }
 
 
@@ -46,7 +46,7 @@ public class MyselectshopServiceTest {
         ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
 
         // When: 서비스 메소드 호출
-        ProductResponseDto responseDto = productService.createProduct(requestDto);
+        ProductResponseDto responseDto = productService.createProduct(requestDto, userDetails.getUser());
 
         // Then: 결과 확인
         Product savedProduct = productRepository.findAll().get(0);
@@ -60,11 +60,11 @@ public class MyselectshopServiceTest {
         // Given
         ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
         ProductRequestDto requestDto2 = new ProductRequestDto("테스트2","이미지 경로2","링크 경로2",2000);
-        productService.createProduct(requestDto);
-        productService.createProduct(requestDto2);
+        productService.createProduct(requestDto, userDetails.getUser());
+        productService.createProduct(requestDto2, userDetails.getUser());
 
         // When
-        List<ProductResponseDto> responseDtos =  productService.readProduct();
+        List<ProductResponseDto> responseDtos =  productService.readProduct(userDetails.getUser());
 
         // Then
         assertEquals(3,responseDtos.size());
