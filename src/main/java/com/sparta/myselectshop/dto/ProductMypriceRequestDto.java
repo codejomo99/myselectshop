@@ -7,4 +7,8 @@ import lombok.Setter;
 @Setter
 public class ProductMypriceRequestDto {
     private int myprice;
+
+    public ProductMypriceRequestDto(int myprice) {
+        this.myprice = myprice;
+    }
 }
