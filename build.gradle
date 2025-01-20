@@ -45,6 +45,9 @@ dependencies {
     // json
     implementation 'org.json:json:20230227'
 
+    // tese
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
 }
 
 tasks.named('test') {
