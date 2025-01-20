@@ -39,6 +39,9 @@ public class ProductController {
         return productService.updateProduct(id, requestDto);
     }
 
-
+    @GetMapping("/admin/products")
+    public List<ProductResponseDto> getAllProducts(){
+        return productService.getAllProduct();
+    }
 
 }
