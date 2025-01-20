@@ -8,6 +8,7 @@ import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
 import com.sparta.myselectshop.repository.ProductRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class MyselectshopServiceTest {
     @Transactional
     // @Rollback(value = false)
     @DisplayName("createProduct - Product를 DB에 저장하고 올바른 결과 반환")
-    void createProduct_integrationTest() {
+    void createProduct() {
 
         // Given: 요청 데이터 준비
         ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
@@ -41,6 +42,22 @@ public class MyselectshopServiceTest {
         Product savedProduct = productRepository.findAll().get(0);
         assertEquals("테스트", savedProduct.getTitle());
         assertEquals(1000, savedProduct.getLprice());
+    }
+
+    @Test
+    @DisplayName("readProduct - Product를 DB에서 조회")
+    void readProduct(){
+        // Given
+        ProductRequestDto requestDto = new ProductRequestDto("테스트","이미지 경로","링크 경로",1000);
+        ProductRequestDto requestDto2 = new ProductRequestDto("테스트2","이미지 경로2","링크 경로2",2000);
+        productService.createProduct(requestDto);
+        productService.createProduct(requestDto2);
+
+        // When
+        List<ProductResponseDto> responseDtos =  productService.readProduct();
+
+        // Then
+        assertEquals(2,responseDtos.size());
     }
 
 
