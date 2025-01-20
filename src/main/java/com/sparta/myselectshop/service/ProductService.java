@@ -60,4 +60,9 @@ public class ProductService {
 
         product.updateByItemDto(itemDto);
     }
+
+    public List<ProductResponseDto> getAllProduct() {
+        return productRepository.findAll().stream()
+                .map(ProductResponseDto::new).toList();
+    }
 }
