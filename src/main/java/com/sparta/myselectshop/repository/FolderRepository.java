@@ -9,4 +9,7 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
 
     // select * from folder where user_id = ? and name in (?, ?, ? );
     List<Folder> findAllByUserAndNameIn(User user, List<String> folderNames);
+
+    // select * from folder where user_id = ?
+    List<Folder> findAllByUser(User user);
 }
