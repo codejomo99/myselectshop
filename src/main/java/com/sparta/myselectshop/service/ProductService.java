@@ -35,6 +35,7 @@ public class ProductService {
     }
 
     // 조회
+    @Transactional(readOnly = true)
     public Page<ProductResponseDto> readProduct(User user, int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Direction.ASC : Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
