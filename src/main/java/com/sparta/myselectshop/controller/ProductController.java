@@ -5,8 +5,6 @@ import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.ProductService;
-import java.awt.print.Pageable;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,10 +24,10 @@ public class ProductController {
 
     private final ProductService productService;
 
+
     @PostMapping("/products")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal
-    UserDetailsImpl userDetails) {
-        return productService.createProduct(productRequestDto, userDetails.getUser());
+    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return productService.createProduct(requestDto, userDetails.getUser());
     }
 
     @GetMapping("/products")
