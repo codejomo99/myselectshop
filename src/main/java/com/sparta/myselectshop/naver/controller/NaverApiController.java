@@ -1,5 +1,6 @@
 package com.sparta.myselectshop.naver.controller;
 
+import com.sparta.myselectshop.aop.Timer;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.naver.service.NaverApiService;
 import java.util.List;
@@ -16,8 +17,10 @@ public class NaverApiController {
 
     private final NaverApiService naverApiService;
 
+    @Timer
     @GetMapping("/search")
     public List<ItemDto> searchItems(@RequestParam String query)  {
         return naverApiService.searchItems(query);
     }
+
 }
