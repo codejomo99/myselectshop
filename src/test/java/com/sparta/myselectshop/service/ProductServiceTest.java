@@ -1,7 +1,11 @@
 package com.sparta.myselectshop.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
@@ -11,6 +15,7 @@ import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.repository.FolderRepository;
 import com.sparta.myselectshop.repository.ProductFolderRepository;
 import com.sparta.myselectshop.repository.ProductRepository;
+import java.util.Locale;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,6 +25,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
 
 @ExtendWith(MockitoExtension.class) // @Mock 사용을 위해 설정합니다.
 class ProductServiceTest {
@@ -33,6 +39,8 @@ class ProductServiceTest {
     @Mock
     ProductFolderRepository productFolderRepository;
 
+    @Mock
+    MessageSource messageSource;
 
     @Nested
     @DisplayName("관심 상품 서비스")
@@ -59,7 +67,7 @@ class ProductServiceTest {
 
             Product product = new Product(requestProductDto, user);
 
-            ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository);
+            ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository,messageSource);
 
             given(productRepository.findById(productId)).willReturn(Optional.of(product));
 
@@ -80,7 +88,14 @@ class ProductServiceTest {
             ProductMypriceRequestDto requestMyPriceDto = new ProductMypriceRequestDto();
             requestMyPriceDto.setMyprice(myprice);
 
-            ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository);
+            ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository,messageSource);
+
+            when(messageSource.getMessage(
+                    eq("below.min.my.price"),
+                    any(),
+                    anyString(),
+                    eq(Locale.getDefault()))
+            ).thenReturn("유효하지 않은 관심 가격입니다. 최소 " + ProductService.MIN_MY_PRICE + " 원 이상으로 설정해 주세요.");
 
             // when
             Exception exception = assertThrows(IllegalArgumentException.class, () -> {
